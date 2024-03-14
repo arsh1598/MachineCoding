@@ -78,13 +78,7 @@ public class CommunicationServiceImpl implements CommunicationService {
 
     @Override
     public void processRequest(CommunicationRequest request) {
-        List<Provider> activeProviders = new ArrayList<>();
-        // Collect all the active providers
-        for (Provider provider : providers) {
-            if (provider.isActive()) {
-                activeProviders.add(provider);
-            }
-        }
+        List<Provider> activeProviders = getActiveProviders();
 
         if (!activeProviders.isEmpty()) {
             Provider chosenProvider = activeProviders.get(new Random().nextInt(activeProviders.size()));
@@ -108,6 +102,18 @@ public class CommunicationServiceImpl implements CommunicationService {
         } else {
             System.out.println("No active providers available for processing the request.");
         }
+    }
+
+    // Helper method to get the active providers
+    private List<Provider> getActiveProviders(){
+        List<Provider> activeProviders = new ArrayList<>();
+        // Collect all the active providers
+        for (Provider provider : providers) {
+            if (provider.isActive()) {
+                activeProviders.add(provider);
+            }
+        }
+        return activeProviders;
     }
 
     // Helper method to get the appropriate account for the given channel from the chosen provider
