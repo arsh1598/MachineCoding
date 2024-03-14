@@ -3,13 +3,14 @@ import dto.Provider;
 import dto.ProviderAccount;
 import enums.CommunicationType;
 import services.CommunicationService;
+import services.impl.CommunicationServiceImpl;
 
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         // Sample
-        CommunicationService communicationService = CommunicationService.getInstance();
+        CommunicationService communicationService = CommunicationServiceImpl.getInstance();
 
         Map<CommunicationType, String> apiEndpoints = new HashMap<>();
         apiEndpoints.put(CommunicationType.EMAIL, "https://phonepe.com/email/send");
@@ -32,9 +33,13 @@ public class Main {
         accounts.add(emailAccount);
         accounts.add(smsAccount);
         accounts.add(soundBoxAccount);
+
         Provider provider1 = new Provider("provider1", true, accounts, apiEndpoints);
+        Provider provider2 = new Provider("provider2", true, accounts, apiEndpoints);
+
         // Add provider
         communicationService.addProvider(provider1);
+        communicationService.addProvider(provider2);
 
         Map<String, String> requestData1 = new HashMap<>();
         requestData1.put("sender", "sender@phonepe.com");
@@ -59,8 +64,11 @@ public class Main {
         // Updating status back to true
         communicationService.updateState("provider1", true);
         // Setting this to null so that no providerAccounts are there
-        provider1.setAccounts(null);
+        provider1.setAccounts(new ArrayList<>());
         communicationService.updateProvider(provider1);
         communicationService.processRequest(request1);
+        System.out.println("======================\n");
+        System.out.println(communicationService.getProvider("provider1"));
+        System.out.println(communicationService.getProvider("provider2"));
     }
 }
